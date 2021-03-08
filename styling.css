@@ -1,0 +1,14 @@
+.error {
+  background: red;
+
+}
+
+.current {
+  background: grey;
+
+}
+
+.correct {
+  background: green;
+  
+}
