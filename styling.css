@@ -1,14 +1,23 @@
+/* color coding link
+    https://accessibility.psu.edu/color/colorcoding/#:~:text=Developers%20using%20red%20and%20green,blue%20then%20red%20and%20green.
+ */
+
+p {
+  border-collapse: separate;
+  box-sizing: border-box;
+}
+
 .error {
   background: red;
 
 }
 
 .current {
-  background: grey;
+  background: black;
+  color: white;
 
 }
 
 .correct {
-  background: green;
-  
+  background: rgb(85, 213, 236);
 }
