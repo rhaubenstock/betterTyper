@@ -7,6 +7,13 @@ const wordList = ["pizzas",
 // add num correct chars
 // add num missed chars
 // add num 
+
+// add displays in percentages 
+
+// add multiple word functionality -- maybe set at 5 to begin with
+// then later on add user input for number of words
+//               add user input for wordlist
+
 const gameState = {
   wordIdx: undefined,
   letterIdx: undefined,
