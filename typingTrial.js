@@ -4,7 +4,9 @@ const wordList = ["pizzas",
                   "obstinance",
                   "foramens",
                  ];
-
+// add num correct chars
+// add num missed chars
+// add num 
 const gameState = {
   wordIdx: undefined,
   letterIdx: undefined,
@@ -14,9 +16,9 @@ const gameState = {
   processingKeys: undefined
 };
 
-const listeners = {
-  keydownListener: undefined
-};
+// const listeners = {
+//   keydownListener: undefined
+// };
 
 const processKeys = () => {
   const { ltrSpanArr, processingKeyQueue } = gameState;
@@ -49,7 +51,7 @@ const handleKeydown = event => {
   event.preventDefault();
   // problem with mashing keys -- 
   // probably need like a processing variable
-  if (event.key.length === 1) {
+  if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)) {
     gameState.processingKeyQueue.push(event.key);
     if(!gameState.processingKeys) processKeys();
   }
