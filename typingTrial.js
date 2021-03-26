@@ -5,70 +5,76 @@ const wordList = ["pizzas",
                   "foramens",
                  ];
 
-// const handleInput = (key) => {
-//   const newSpan = document.createElement("span");
-//   newSpan.innerText = key;
-//   newSpan.classList.add(key === currentEl.innerText ? "correct" : "error");
-//   typedEl.appendChild(newSpan);
-//   currentEl.innerText = toTypeEl.innerText[0];
-//   console.log(toTypeEl.innerText);
-//   toTypeEl.innerText = toTypeEl.innerText.slice(1);
-//   console.log(toTypeEl.innerText);
-// };
+const gameState = {
+  wordIdx: undefined,
+  letterIdx: undefined,
+  ltrSpanArr: undefined,
+  words: undefined,
+  processingKeyQueue: undefined,
+  processingKeys: undefined
+};
 
-const gameStart = (word, ltrSpanArr) => {
-//   // <p>
-//   //   <span id="typed"></span>
-//   //   <span id="current" class="current"></span>
-//   //   <span id="to-type"></span>
-//   // </p>
-//   // <input type="text" id="input"></input>
+const listeners = {
+  keydownListener: undefined
+};
 
-//   // const typedSpan = document.createElement("span");
-//   // typedSpan.classList.add("typed");
-
-//   // const currSpan = document.createElement("current");
-//   // currSpan.classList.add("typed");
-
-//   const toTypeSpan = document.createElement("to-type");
-//   toTypeSpan.classList.add("to-type");
-//   // generate word -- break into letters -- each contained in a span
-//   // array of spans
-//   // 
-
-//   inputEl.addEventListener("keydown", event => {
-//     event.preventDefault();
-//     if (event.key.length === 1) handleInput(event.key);
-//   })
-  idx = 0;
-  const handleInput = (key) => {
-    ltrSpanArr[idx].classList.remove("current");
-    if (word[idx] === key){
-      ltrSpanArr[idx].classList.remove("error");
-      ltrSpanArr[idx].classList.add("correct");
-      idx += 1;
-      if (idx === word.length){
+const processKeys = () => {
+  const { ltrSpanArr, processingKeyQueue } = gameState;
+  const word = gameState.words[gameState.wordIdx];
+  while (processingKeyQueue.length > 0){
+    let key = processingKeyQueue.shift();
+    ltrSpanArr[gameState.letterIdx].classList.remove("current");
+    if (word[gameState.letterIdx] === key){
+      ltrSpanArr[gameState.letterIdx].classList.remove("error");
+      ltrSpanArr[gameState.letterIdx].classList.add("correct");
+      gameState.letterIdx += 1;
+      if (gameState.letterIdx === word.length){
         // maybe add a set timeout first?
+        console.log("game over")
         gameStop();
       }
       else {
-        ltrSpanArr[idx].classList.add("current");
+        ltrSpanArr[gameState.letterIdx].classList.add("current");
       }
     }
     else{
-      ltrSpanArr[idx].classList.add("error");
+      ltrSpanArr[gameState.letterIdx].classList.add("error");
     }
-  };
-  document.body.addEventListener("keydown", event => {
-    event.preventDefault();
-    if (event.key.length === 1) handleInput(event.key);
+  }
+  gameState.processingKeys = false;
+};
 
-  });
+
+const handleKeydown = event => {
+  event.preventDefault();
+  // problem with mashing keys -- 
+  // probably need like a processing variable
+  if (event.key.length === 1) {
+    gameState.processingKeyQueue.push(event.key);
+    if(!gameState.processingKeys) processKeys();
+  }
+};
+
+
+const gameStart = (word, ltrSpanArr) => {
+  gameState.letterIdx = 0;
+  gameState.wordIdx = 0;
+  gameState.words = [word];
+  gameState.ltrSpanArr = ltrSpanArr;
+  gameState.processingKeyQueue = [];
+  gameState.processingKeys = false;
+  document.body.addEventListener("keydown", handleKeydown);
 };
 
 const gameStop = () => {
-  document.body.removeEventListener("keydown");
-  document.body.removeEventListener("keyup");
+  document.body.removeEventListener("keydown", handleKeydown);
+  const gameEl = document.getElementsByClassName("game")[0];
+  gameEl.innerHTML = "";
+  gameEl.classList.add("off");
+  const instructionsButton = document.getElementsByClassName("instructions-button")[0];
+  instructionsButton.classList.remove("off");
+  const gameStartButton = document.getElementsByClassName("game-start-button")[0];
+  gameStartButton.classList.remove("off");
 }
 
 
