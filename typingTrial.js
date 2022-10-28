@@ -12,8 +12,9 @@ const gameState = {
   letterIdx: undefined,
   ltrSpanArr: undefined,
   words: undefined,
-  processingKeyQueue: undefined,
-  processingKeys: undefined
+  key: undefined,
+  prevChar: undefined,
+  prevTimestamp: undefined
 };
 
 // const listeners = {
@@ -21,29 +22,26 @@ const gameState = {
 // };
 
 const processKeys = () => {
-  const { ltrSpanArr, processingKeyQueue } = gameState;
+  const { ltrSpanArr } = gameState;
   const word = gameState.words[gameState.wordIdx];
-  while (processingKeyQueue.length > 0){
-    let key = processingKeyQueue.shift();
-    ltrSpanArr[gameState.letterIdx].classList.remove("current");
-    if (word[gameState.letterIdx] === key){
-      ltrSpanArr[gameState.letterIdx].classList.remove("error");
-      ltrSpanArr[gameState.letterIdx].classList.add("correct");
-      gameState.letterIdx += 1;
-      if (gameState.letterIdx === word.length){
-        // maybe add a set timeout first?
-        console.log("game over")
-        gameStop();
-      }
-      else {
-        ltrSpanArr[gameState.letterIdx].classList.add("current");
-      }
+  const key = gameState.key;
+  ltrSpanArr[gameState.letterIdx].classList.remove("current");
+  if (word[gameState.letterIdx] === key){
+    ltrSpanArr[gameState.letterIdx].classList.remove("error");
+    ltrSpanArr[gameState.letterIdx].classList.add("correct");
+    gameState.letterIdx += 1;
+    if (gameState.letterIdx === word.length){
+      // maybe add a set timeout first?
+      // console.log("game over")
+      gameStop();
     }
-    else{
-      ltrSpanArr[gameState.letterIdx].classList.add("error");
+    else {
+      ltrSpanArr[gameState.letterIdx].classList.add("current");
     }
   }
-  gameState.processingKeys = false;
+  else{
+    ltrSpanArr[gameState.letterIdx].classList.add("error");
+  }
 };
 
 
@@ -52,10 +50,18 @@ const handleKeydown = event => {
   // problem with mashing keys -- 
   // probably need like a processing variable
   if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)) {
-    gameState.processingKeyQueue.push(event.key);
-    if(!gameState.processingKeys) processKeys();
+    gameState.key = event.key;
+    // const time = Date.now();
+    // const timeDiff = time - gameState.prevTimestamp;
+    // gameState.prevTimestamp = time;
+    processKeys();
   }
 };
+
+const handleKeyup = event => {
+  event.preventDefault();
+
+}
 
 
 const gameStart = (word, ltrSpanArr) => {
@@ -63,13 +69,13 @@ const gameStart = (word, ltrSpanArr) => {
   gameState.wordIdx = 0;
   gameState.words = [word];
   gameState.ltrSpanArr = ltrSpanArr;
-  gameState.processingKeyQueue = [];
-  gameState.processingKeys = false;
   document.body.addEventListener("keydown", handleKeydown);
+  document.body.addEventListener("keyup", handleKeyup);
 };
 
 const gameStop = () => {
   document.body.removeEventListener("keydown", handleKeydown);
+  document.body.removeEventListener("keyup", handleKeyup);
   const gameEl = document.getElementsByClassName("game")[0];
   gameEl.innerHTML = "";
   gameEl.classList.add("off");
@@ -94,10 +100,8 @@ window.addEventListener("DOMContentLoaded", () => {
   const gameEl = document.getElementsByClassName("game")[0];
 
   const gameStartButton = document.getElementsByClassName("game-start-button")[0];
+  
   gameStartButton.addEventListener("click", ()=> {
-    // game Start function here
-    // -- add a word
-    //make instructions Button disappear?
     instructionsButton.classList.toggle("off");
     gameStartButton.classList.toggle("off");
     const word = wordList[Math.trunc(Math.random() * wordList.length)];
