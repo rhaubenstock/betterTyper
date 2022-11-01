@@ -1,36 +1,44 @@
-const wordList = ["pizzas",
-                  "suburban",
-                  "assuming",
-                  "obstinance",
-                  "foramens",
-                 ];
-// add num correct chars
-// add num missed chars
-// add num 
-const gameState = {
-  wordIdx: undefined,
-  letterIdx: undefined,
-  ltrSpanArr: undefined,
-  words: undefined,
-  key: undefined,
-  prevChar: undefined,
-  prevTimestamp: undefined
-};
+import {gameState, wordList} from "./constants.js";
+import { TGameStart } from "./types.js";
+// import debug from "debug";
+// let log;
+
+//can access this through browser terminal
+//want to hide it -> browser can only see global obj
+
+//iife -> immediately invoked function expression
+// (() => {
+
+//})() 
+
+// multiple ways to approach sharing gameState but also keeping hidden:
+//  1. npm packages -> hidden in local storage
+//  2. class -> ecmaScript 7 -> private methods, private properties -- use '#' 
+//    a. Potential issue with browser compatibility
+//    b. webpack
+//    c. polyfill/shim -> fill in missing pieces
+//    d. rollup -> set up config -> compile from ts to js -> remove comments, 
+//       can obfuscate, minify/compress, 
+//    e. Shims reproduce spread/rest operator
+//  3. 
+
+
 
 // const listeners = {
 //   keydownListener: undefined
 // };
 
 const processKeys = () => {
-  const { ltrSpanArr } = gameState;
-  const word = gameState.words[gameState.wordIdx];
+  if(!gameState) return;
+  const { ltrSpanArr, words } = gameState;
+  const word = words[gameState.wordIdx];
   const key = gameState.key;
   ltrSpanArr[gameState.letterIdx].classList.remove("current");
-  if (word[gameState.letterIdx] === key){
+  if (word[gameState.letterIdx] === key) {
     ltrSpanArr[gameState.letterIdx].classList.remove("error");
     ltrSpanArr[gameState.letterIdx].classList.add("correct");
     gameState.letterIdx += 1;
-    if (gameState.letterIdx === word.length){
+    if (gameState.letterIdx === word.length) {
       // maybe add a set timeout first?
       // console.log("game over")
       gameStop();
@@ -39,17 +47,20 @@ const processKeys = () => {
       ltrSpanArr[gameState.letterIdx].classList.add("current");
     }
   }
-  else{
+  else {
     ltrSpanArr[gameState.letterIdx].classList.add("error");
   }
 };
 
 
-const handleKeydown = event => {
+const handleKeydown = (event:KeyboardEvent) => {
   event.preventDefault();
-  // problem with mashing keys -- 
-  // probably need like a processing variable
-  if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)) {
+  // event key is either going to be empty array or array of all keyst pressing
+  // string and array methods -> lot of overlap
+  // match -> return array of matches and idxs of the matches elements
+  // regEx -> test, match, execute -- resource: regex101.com
+  // 
+  if (event?.key?.match(/[a-zA-Z]/)) {
     gameState.key = event.key;
     // const time = Date.now();
     // const timeDiff = time - gameState.prevTimestamp;
@@ -58,13 +69,14 @@ const handleKeydown = event => {
   }
 };
 
-const handleKeyup = event => {
+const handleKeyup = (event:KeyboardEvent) => {
   event.preventDefault();
 
 }
 
+// can add @return, @extends, @deprecated
 
-const gameStart = (word, ltrSpanArr) => {
+const gameStart:TGameStart = (word:string, ltrSpanArr:HTMLElement[]) => {
   gameState.letterIdx = 0;
   gameState.wordIdx = 0;
   gameState.words = [word];
@@ -87,26 +99,31 @@ const gameStop = () => {
 
 
 window.addEventListener("DOMContentLoaded", () => {
+  // log = window.debug("typer");
+  // window.debug.enable("typer");
+  // log("hello");
+  // console.log(window);
+
   const modalBackground = document.getElementsByClassName("modal-background")[0];
-  modalBackground.addEventListener("click", ()=>{
+  modalBackground.addEventListener("click", () => {
     modalBackground.classList.toggle("off");
   });
-  
+
   const instructionsButton = document.getElementsByClassName("instructions-button")[0];
-  instructionsButton.addEventListener("click",()=>{
+  instructionsButton.addEventListener("click", () => {
     modalBackground.classList.toggle("off");
   });
 
   const gameEl = document.getElementsByClassName("game")[0];
 
   const gameStartButton = document.getElementsByClassName("game-start-button")[0];
-  
-  gameStartButton.addEventListener("click", ()=> {
+
+  gameStartButton.addEventListener("click", () => {
     instructionsButton.classList.toggle("off");
     gameStartButton.classList.toggle("off");
     const word = wordList[Math.trunc(Math.random() * wordList.length)];
     gameEl.classList.toggle("off");
-    const letterSpanArr = [];
+    const letterSpanArr:HTMLElement[] = [];
     word.split("").forEach(letter => {
       const newLetter = document.createElement("span");
       newLetter.innerText = letter;
@@ -118,12 +135,6 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-
-// next to do -- array of string + correct or wrong
-// add eventListener for keyDown on inputEl
-// add eventListener for keyUp on inputEl
-// be able to control text of inputEl
-// through the keyDown inputs
 
 
 
