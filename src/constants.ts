@@ -14,7 +14,9 @@ export const gameState:TGameState = {
     words: [],
     key: '',
     prevChar: '',
-    prevTimestamp: 0
+    prevTimestamp: 0,
+    correctTimeDiffs: [],
+    incorrectTimeDiffs: []
 };
 
 

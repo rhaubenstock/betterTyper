@@ -14,4 +14,6 @@ export type TGameState = {
     key: string;
     prevChar: string;
     prevTimestamp: number;
+    correctTimeDiffs: number[];
+    incorrectTimeDiffs: number[];
 };

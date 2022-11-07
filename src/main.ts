@@ -7,7 +7,6 @@ import { TGameSetup } from "./types.js";
 
 const setUpWord = () => {
   const word = gameState.words[gameState.wordIdx];
-
   const letterSpanArr:HTMLElement[] = [];
 
     word.split("").forEach(letter => {
@@ -19,8 +18,6 @@ const setUpWord = () => {
     letterSpanArr[0].classList.add("current");
     gameState.ltrSpanArr = letterSpanArr;
     gameEl.replaceChildren(...letterSpanArr);
-
-    // also sets timer
 };
 
 const getNextState = () => {
@@ -33,7 +30,7 @@ const getNextState = () => {
   setUpWord();
 };
 
-const processKeys = () => {
+const processKeys = (timeDiff:number) => {
   if(!gameState) return;
   const { ltrSpanArr, words } = gameState;
 
@@ -43,9 +40,10 @@ const processKeys = () => {
 
   if (word[gameState.letterIdx] !== key) {
     ltrSpanArr[gameState.letterIdx].classList.add("error");
+    gameState.incorrectTimeDiffs.push(timeDiff);
     return;
   }
-
+  gameState.correctTimeDiffs.push(timeDiff);
   ltrSpanArr[gameState.letterIdx].classList.remove("error");
   ltrSpanArr[gameState.letterIdx].classList.add("correct");
 
@@ -68,16 +66,16 @@ const handleKeydown = (event:KeyboardEvent) => {
   // 
   if (event?.key?.match(/[a-zA-Z]/)) {
     gameState.key = event.key;
-    // const time = Date.now();
-    // const timeDiff = time - gameState.prevTimestamp;
-    // gameState.prevTimestamp = time;
-    processKeys();
+    const time = Date.now();
+    const timeDiff = time - gameState.prevTimestamp;
+    gameState.prevTimestamp = time;
+    processKeys(timeDiff);
   }
 };
 
+// implement later
 const handleKeyup = (event:KeyboardEvent) => {
   event.preventDefault();
-
 }
 
 // can add @return, @extends, @deprecated
@@ -97,7 +95,8 @@ const gameSetup:TGameSetup = (words:string[]) => {
 const gameStop = () => {
   document.body.removeEventListener("keydown", handleKeydown);
   document.body.removeEventListener("keyup", handleKeyup);
-
+  // console.log(gameState.correctTimeDiffs);
+  // console.log(gameState.incorrectTimeDiffs);
   const gameEl = document.getElementsByClassName("game")[0];
   gameEl.innerHTML = "";
   gameEl.classList.add("off");
@@ -132,7 +131,7 @@ window.addEventListener("DOMContentLoaded", () => {
     gameEl.classList.toggle("off");
     gameSetup(wordList);
     setUpWord();
-
+    gameState.prevTimestamp = Date.now();
   });
 });
 
