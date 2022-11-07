@@ -1,54 +1,60 @@
 import {gameState, wordList} from "./constants.js";
-import { TGameStart } from "./types.js";
-// import debug from "debug";
-// let log;
-
-//can access this through browser terminal
-//want to hide it -> browser can only see global obj
-
-//iife -> immediately invoked function expression
-// (() => {
-
-//})() 
-
-// multiple ways to approach sharing gameState but also keeping hidden:
-//  1. npm packages -> hidden in local storage
-//  2. class -> ecmaScript 7 -> private methods, private properties -- use '#' 
-//    a. Potential issue with browser compatibility
-//    b. webpack
-//    c. polyfill/shim -> fill in missing pieces
-//    d. rollup -> set up config -> compile from ts to js -> remove comments, 
-//       can obfuscate, minify/compress, 
-//    e. Shims reproduce spread/rest operator
-//  3. 
-
-
+import { TGameSetup } from "./types.js";
 
 // const listeners = {
 //   keydownListener: undefined
 // };
 
+const setUpWord = () => {
+  const word = gameState.words[gameState.wordIdx];
+
+  const letterSpanArr:HTMLElement[] = [];
+
+    word.split("").forEach(letter => {
+      const newLetter = document.createElement("span");
+      newLetter.innerText = letter;
+      letterSpanArr.push(newLetter);
+    });
+    const gameEl = document.getElementsByClassName("game")[0];
+    letterSpanArr[0].classList.add("current");
+    gameState.ltrSpanArr = letterSpanArr;
+    gameEl.replaceChildren(...letterSpanArr);
+
+    // also sets timer
+};
+
+const getNextState = () => {
+  gameState.wordIdx += 1;
+  gameState.letterIdx = 0;
+  if (gameState.wordIdx === gameState.words.length){
+    gameStop();
+    return;
+  }
+  setUpWord();
+};
+
 const processKeys = () => {
   if(!gameState) return;
   const { ltrSpanArr, words } = gameState;
+
   const word = words[gameState.wordIdx];
   const key = gameState.key;
   ltrSpanArr[gameState.letterIdx].classList.remove("current");
-  if (word[gameState.letterIdx] === key) {
-    ltrSpanArr[gameState.letterIdx].classList.remove("error");
-    ltrSpanArr[gameState.letterIdx].classList.add("correct");
-    gameState.letterIdx += 1;
-    if (gameState.letterIdx === word.length) {
-      // maybe add a set timeout first?
-      // console.log("game over")
-      gameStop();
-    }
-    else {
-      ltrSpanArr[gameState.letterIdx].classList.add("current");
-    }
+
+  if (word[gameState.letterIdx] !== key) {
+    ltrSpanArr[gameState.letterIdx].classList.add("error");
+    return;
+  }
+
+  ltrSpanArr[gameState.letterIdx].classList.remove("error");
+  ltrSpanArr[gameState.letterIdx].classList.add("correct");
+
+  gameState.letterIdx += 1;
+  if (gameState.letterIdx === word.length) {
+    getNextState();
   }
   else {
-    ltrSpanArr[gameState.letterIdx].classList.add("error");
+    ltrSpanArr[gameState.letterIdx].classList.add("current");
   }
 };
 
@@ -76,21 +82,26 @@ const handleKeyup = (event:KeyboardEvent) => {
 
 // can add @return, @extends, @deprecated
 
-const gameStart:TGameStart = (word:string, ltrSpanArr:HTMLElement[]) => {
+const gameSetup:TGameSetup = (words:string[]) => {
+  // generate sequence of words
+  // setup gameState variables
   gameState.letterIdx = 0;
   gameState.wordIdx = 0;
-  gameState.words = [word];
-  gameState.ltrSpanArr = ltrSpanArr;
+  gameState.words = words;
   document.body.addEventListener("keydown", handleKeydown);
   document.body.addEventListener("keyup", handleKeyup);
 };
 
+
+
 const gameStop = () => {
   document.body.removeEventListener("keydown", handleKeydown);
   document.body.removeEventListener("keyup", handleKeyup);
+
   const gameEl = document.getElementsByClassName("game")[0];
   gameEl.innerHTML = "";
   gameEl.classList.add("off");
+
   const instructionsButton = document.getElementsByClassName("instructions-button")[0];
   instructionsButton.classList.remove("off");
   const gameStartButton = document.getElementsByClassName("game-start-button")[0];
@@ -99,10 +110,6 @@ const gameStop = () => {
 
 
 window.addEventListener("DOMContentLoaded", () => {
-  // log = window.debug("typer");
-  // window.debug.enable("typer");
-  // log("hello");
-  // console.log(window);
 
   const modalBackground = document.getElementsByClassName("modal-background")[0];
   modalBackground.addEventListener("click", () => {
@@ -119,19 +126,13 @@ window.addEventListener("DOMContentLoaded", () => {
   const gameStartButton = document.getElementsByClassName("game-start-button")[0];
 
   gameStartButton.addEventListener("click", () => {
+    // turn off first screen
     instructionsButton.classList.toggle("off");
     gameStartButton.classList.toggle("off");
-    const word = wordList[Math.trunc(Math.random() * wordList.length)];
     gameEl.classList.toggle("off");
-    const letterSpanArr:HTMLElement[] = [];
-    word.split("").forEach(letter => {
-      const newLetter = document.createElement("span");
-      newLetter.innerText = letter;
-      letterSpanArr.push(newLetter);
-    });
-    letterSpanArr[0].classList.add("current");
-    letterSpanArr.forEach(letterSpan => gameEl.appendChild(letterSpan));
-    gameStart(word, letterSpanArr);
+    gameSetup(wordList);
+    setUpWord();
+
   });
 });
 
