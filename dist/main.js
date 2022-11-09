@@ -1,9 +1,9 @@
-import { gameState, wordList } from "./constants.js";
+import { gameState, phraseList } from "./constants.js";
 // const listeners = {
 //   keydownListener: undefined
 // };
 const setUpWord = () => {
-    const word = gameState.words[gameState.wordIdx];
+    const word = gameState.words[gameState.phraseIdx];
     const letterSpanArr = [];
     word.split("").forEach(letter => {
         const newLetter = document.createElement("span");
@@ -16,9 +16,9 @@ const setUpWord = () => {
     gameEl.replaceChildren(...letterSpanArr);
 };
 const getNextState = () => {
-    gameState.wordIdx += 1;
-    gameState.letterIdx = 0;
-    if (gameState.wordIdx === gameState.words.length) {
+    gameState.phraseIdx += 1;
+    gameState.charIdx = 0;
+    if (gameState.phraseIdx === gameState.words.length) {
         gameStop();
         return;
     }
@@ -28,23 +28,23 @@ const processKeys = (timeDiff) => {
     if (!gameState)
         return;
     const { ltrSpanArr, words } = gameState;
-    const word = words[gameState.wordIdx];
+    const word = words[gameState.phraseIdx];
     const key = gameState.key;
-    ltrSpanArr[gameState.letterIdx].classList.remove("current");
-    if (word[gameState.letterIdx] !== key) {
-        ltrSpanArr[gameState.letterIdx].classList.add("error");
+    ltrSpanArr[gameState.charIdx].classList.remove("current");
+    if (word[gameState.charIdx] !== key) {
+        ltrSpanArr[gameState.charIdx].classList.add("error");
         gameState.incorrectTimeDiffs.push(timeDiff);
         return;
     }
     gameState.correctTimeDiffs.push(timeDiff);
-    ltrSpanArr[gameState.letterIdx].classList.remove("error");
-    ltrSpanArr[gameState.letterIdx].classList.add("correct");
-    gameState.letterIdx += 1;
-    if (gameState.letterIdx === word.length) {
+    ltrSpanArr[gameState.charIdx].classList.remove("error");
+    ltrSpanArr[gameState.charIdx].classList.add("correct");
+    gameState.charIdx += 1;
+    if (gameState.charIdx === word.length) {
         getNextState();
     }
     else {
-        ltrSpanArr[gameState.letterIdx].classList.add("current");
+        ltrSpanArr[gameState.charIdx].classList.add("current");
     }
 };
 const handleKeydown = (event) => {
@@ -55,7 +55,8 @@ const handleKeydown = (event) => {
     // match -> return array of matches and idxs of the matches elements
     // regEx -> test, match, execute -- resource: regex101.com
     // 
-    if ((_a = event === null || event === void 0 ? void 0 : event.key) === null || _a === void 0 ? void 0 : _a.match(/[a-zA-Z]/)) {
+    //
+    if ((_a = event === null || event === void 0 ? void 0 : event.key) === null || _a === void 0 ? void 0 : _a.match(/[a-zA-Z ]/)) {
         gameState.key = event.key;
         const time = Date.now();
         const timeDiff = time - gameState.prevTimestamp;
@@ -71,8 +72,8 @@ const handleKeyup = (event) => {
 const gameSetup = (words) => {
     // generate sequence of words
     // setup gameState variables
-    gameState.letterIdx = 0;
-    gameState.wordIdx = 0;
+    gameState.charIdx = 0;
+    gameState.phraseIdx = 0;
     gameState.words = words;
     document.body.addEventListener("keydown", handleKeydown);
     document.body.addEventListener("keyup", handleKeyup);
@@ -80,8 +81,8 @@ const gameSetup = (words) => {
 const gameStop = () => {
     document.body.removeEventListener("keydown", handleKeydown);
     document.body.removeEventListener("keyup", handleKeyup);
-    console.log(gameState.correctTimeDiffs);
-    console.log(gameState.incorrectTimeDiffs);
+    // console.log(gameState.correctTimeDiffs);
+    // console.log(gameState.incorrectTimeDiffs);
     const gameEl = document.getElementsByClassName("game")[0];
     gameEl.innerHTML = "";
     gameEl.classList.add("off");
@@ -106,7 +107,7 @@ window.addEventListener("DOMContentLoaded", () => {
         instructionsButton.classList.toggle("off");
         gameStartButton.classList.toggle("off");
         gameEl.classList.toggle("off");
-        gameSetup(wordList);
+        gameSetup(phraseList);
         setUpWord();
         gameState.prevTimestamp = Date.now();
     });
