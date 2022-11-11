@@ -1,7 +1,4 @@
 import { gameState, phraseList } from "./constants.js";
-// const listeners = {
-//   keydownListener: undefined
-// };
 const setUpWord = () => {
     const word = gameState.words[gameState.phraseIdx];
     const letterSpanArr = [];
@@ -24,7 +21,8 @@ const getNextState = () => {
     }
     setUpWord();
 };
-const processKeys = (timeDiff) => {
+const processKey = (timeDiff) => {
+    window.console.log(timeDiff);
     if (!gameState)
         return;
     const { ltrSpanArr, words } = gameState;
@@ -34,11 +32,16 @@ const processKeys = (timeDiff) => {
     if (word[gameState.charIdx] !== key) {
         ltrSpanArr[gameState.charIdx].classList.add("error");
         gameState.incorrectTimeDiffs.push(timeDiff);
+        const incorrectChars = document.getElementsByClassName("incorrect-chars")[0];
+        incorrectChars.innerHTML = `${gameState.incorrectTimeDiffs.length}`;
+        window.console.log("hello?");
         return;
     }
     gameState.correctTimeDiffs.push(timeDiff);
     ltrSpanArr[gameState.charIdx].classList.remove("error");
     ltrSpanArr[gameState.charIdx].classList.add("correct");
+    const correctChars = document.getElementsByClassName("correct-chars")[0];
+    correctChars.innerHTML = `${gameState.correctTimeDiffs.length}`;
     gameState.charIdx += 1;
     if (gameState.charIdx === word.length) {
         getNextState();
@@ -55,20 +58,16 @@ const handleKeydown = (event) => {
     // match -> return array of matches and idxs of the matches elements
     // regEx -> test, match, execute -- resource: regex101.com
     // 
+    window.console.log("jiodjoijdiosajdsaoij");
     //
     if ((_a = event === null || event === void 0 ? void 0 : event.key) === null || _a === void 0 ? void 0 : _a.match(/[a-zA-Z ]/)) {
         gameState.key = event.key;
         const time = Date.now();
         const timeDiff = time - gameState.prevTimestamp;
         gameState.prevTimestamp = time;
-        processKeys(timeDiff);
+        processKey(timeDiff);
     }
 };
-// implement later
-const handleKeyup = (event) => {
-    event.preventDefault();
-};
-// can add @return, @extends, @deprecated
 const gameSetup = (words) => {
     // generate sequence of words
     // setup gameState variables
@@ -76,11 +75,9 @@ const gameSetup = (words) => {
     gameState.phraseIdx = 0;
     gameState.words = words;
     document.body.addEventListener("keydown", handleKeydown);
-    document.body.addEventListener("keyup", handleKeyup);
 };
 const gameStop = () => {
     document.body.removeEventListener("keydown", handleKeydown);
-    document.body.removeEventListener("keyup", handleKeyup);
     // console.log(gameState.correctTimeDiffs);
     // console.log(gameState.incorrectTimeDiffs);
     const gameEl = document.getElementsByClassName("game")[0];
@@ -92,6 +89,7 @@ const gameStop = () => {
     gameStartButton.classList.remove("off");
 };
 window.addEventListener("DOMContentLoaded", () => {
+    window.console.log("DOM loaded");
     const modalBackground = document.getElementsByClassName("modal-background")[0];
     modalBackground.addEventListener("click", () => {
         modalBackground.classList.toggle("off");
@@ -100,13 +98,20 @@ window.addEventListener("DOMContentLoaded", () => {
     instructionsButton.addEventListener("click", () => {
         modalBackground.classList.toggle("off");
     });
+    //probably update to querySelectorAll
+    //see here:
+    //https://stackoverflow.com/questions/2694640/find-an-element-in-dom-based-on-an-attribute-value
     const gameEl = document.getElementsByClassName("game")[0];
     const gameStartButton = document.getElementsByClassName("game-start-button")[0];
+    const correctChars = document.getElementsByClassName("correct-chars")[0];
+    const incorrectChars = document.getElementsByClassName("incorrect-chars")[0];
     gameStartButton.addEventListener("click", () => {
         // turn off first screen
         instructionsButton.classList.toggle("off");
         gameStartButton.classList.toggle("off");
         gameEl.classList.toggle("off");
+        correctChars.classList.toggle("off");
+        incorrectChars.classList.toggle("off");
         gameSetup(phraseList);
         setUpWord();
         gameState.prevTimestamp = Date.now();

@@ -27,10 +27,11 @@ const getNextState = () => {
   setUpWord();
 };
 
-const processKeys = (timeDiff:number) => {
+const processKey = (timeDiff:number) => {
+  window.console.log(timeDiff);
   if(!gameState) return;
-  const { ltrSpanArr, words } = gameState;
 
+  const { ltrSpanArr, words } = gameState;
   const word = words[gameState.phraseIdx];
   const key = gameState.key;
   ltrSpanArr[gameState.charIdx].classList.remove("current");
@@ -38,12 +39,18 @@ const processKeys = (timeDiff:number) => {
   if (word[gameState.charIdx] !== key) {
     ltrSpanArr[gameState.charIdx].classList.add("error");
     gameState.incorrectTimeDiffs.push(timeDiff);
+
+    const incorrectChars = document.getElementsByClassName("incorrect-chars")[0];
+    incorrectChars.innerHTML = `${gameState.incorrectTimeDiffs.length}`;
+    window.console.log("hello?")
     return;
   }
   gameState.correctTimeDiffs.push(timeDiff);
   ltrSpanArr[gameState.charIdx].classList.remove("error");
   ltrSpanArr[gameState.charIdx].classList.add("correct");
 
+  const correctChars = document.getElementsByClassName("correct-chars")[0];
+  correctChars.innerHTML = `${gameState.correctTimeDiffs.length}`;
   gameState.charIdx += 1;
   if (gameState.charIdx === word.length) {
     getNextState();
@@ -61,14 +68,14 @@ const handleKeydown = (event:KeyboardEvent) => {
   // match -> return array of matches and idxs of the matches elements
   // regEx -> test, match, execute -- resource: regex101.com
   // 
-  
+  window.console.log("jiodjoijdiosajdsaoij");
   //
   if (event?.key?.match(/[a-zA-Z ]/)) {
     gameState.key = event.key;
     const time = Date.now();
     const timeDiff = time - gameState.prevTimestamp;
     gameState.prevTimestamp = time;
-    processKeys(timeDiff);
+    processKey(timeDiff);
   }
 };
 
@@ -101,7 +108,7 @@ const gameStop = () => {
 
 
 window.addEventListener("DOMContentLoaded", () => {
-
+  window.console.log("DOM loaded");
   const modalBackground = document.getElementsByClassName("modal-background")[0];
   modalBackground.addEventListener("click", () => {
     modalBackground.classList.toggle("off");
@@ -112,15 +119,22 @@ window.addEventListener("DOMContentLoaded", () => {
     modalBackground.classList.toggle("off");
   });
 
+  //probably update to querySelectorAll
+  //see here:
+  //https://stackoverflow.com/questions/2694640/find-an-element-in-dom-based-on-an-attribute-value
   const gameEl = document.getElementsByClassName("game")[0];
-
   const gameStartButton = document.getElementsByClassName("game-start-button")[0];
+  const correctChars = document.getElementsByClassName("correct-chars")[0];
+  const incorrectChars = document.getElementsByClassName("incorrect-chars")[0];
 
   gameStartButton.addEventListener("click", () => {
     // turn off first screen
+
     instructionsButton.classList.toggle("off");
     gameStartButton.classList.toggle("off");
     gameEl.classList.toggle("off");
+    correctChars.classList.toggle("off");
+    incorrectChars.classList.toggle("off");
     gameSetup(phraseList);
     setUpWord();
     gameState.prevTimestamp = Date.now();
