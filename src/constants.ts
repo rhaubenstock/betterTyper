@@ -12,6 +12,7 @@ export const phraseList:string[] = [
 ];
 
 export const gameState:TGameState = {
+    gameEl: document.getElementById("game"),
     phraseIdx: 0,
     charIdx: 0,
     ltrSpanArr: [],

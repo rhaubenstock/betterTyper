@@ -1,20 +1,19 @@
 import {gameState, phraseList} from "./constants.js";
 import { TGameSetup } from "./types.js";
 
-
 const setUpWord = () => {
-  const word = gameState.words[gameState.phraseIdx];
+  const word:string = gameState.words[gameState.phraseIdx];
   const letterSpanArr:HTMLElement[] = [];
 
-    word.split("").forEach(letter => {
+    for(let i = 0; i < word.length; i++){
+      const letter = word[i];
       const newLetter = document.createElement("span");
       newLetter.innerText = letter;
       letterSpanArr.push(newLetter);
-    });
-    const gameEl = document.getElementsByClassName("game")[0];
+    };
     letterSpanArr[0].classList.add("current");
     gameState.ltrSpanArr = letterSpanArr;
-    gameEl.replaceChildren(...letterSpanArr);
+    gameState.gameEl.replaceChildren(...letterSpanArr);
 };
 
 const getNextState = () => {
@@ -68,7 +67,6 @@ const handleKeydown = (event:KeyboardEvent) => {
   // match -> return array of matches and idxs of the matches elements
   // regEx -> test, match, execute -- resource: regex101.com
   // 
-  window.console.log("jiodjoijdiosajdsaoij");
   //
   if (event?.key?.match(/[a-zA-Z ]/)) {
     gameState.key = event.key;
@@ -94,27 +92,30 @@ const gameSetup:TGameSetup = (words:string[]) => {
 
 const gameStop = () => {
   document.body.removeEventListener("keydown", handleKeydown);
-  // console.log(gameState.correctTimeDiffs);
-  // console.log(gameState.incorrectTimeDiffs);
-  const gameEl = document.getElementsByClassName("game")[0];
+  const gameEl = gameState.gameEl;
+  if(gameEl == null){
+    alert("An error has occurred. Please reload page.");
+    return;
+  }
+  // if gameEl is null add it to the body of the game first?
   gameEl.innerHTML = "";
   gameEl.classList.add("off");
 
-  const instructionsButton = document.getElementsByClassName("instructions-button")[0];
+  const instructionsButton = document.getElementById("instructions-button");
   instructionsButton.classList.remove("off");
-  const gameStartButton = document.getElementsByClassName("game-start-button")[0];
+  const gameStartButton = document.getElementById("game-start-button");
   gameStartButton.classList.remove("off");
 }
 
 
 window.addEventListener("DOMContentLoaded", () => {
   window.console.log("DOM loaded");
-  const modalBackground = document.getElementsByClassName("modal-background")[0];
+  const modalBackground = document.getElementById("modal-background");
   modalBackground.addEventListener("click", () => {
     modalBackground.classList.toggle("off");
   });
 
-  const instructionsButton = document.getElementsByClassName("instructions-button")[0];
+  const instructionsButton = document.getElementById("instructions-button");
   instructionsButton.addEventListener("click", () => {
     modalBackground.classList.toggle("off");
   });
@@ -122,10 +123,10 @@ window.addEventListener("DOMContentLoaded", () => {
   //probably update to querySelectorAll
   //see here:
   //https://stackoverflow.com/questions/2694640/find-an-element-in-dom-based-on-an-attribute-value
-  const gameEl = document.getElementsByClassName("game")[0];
-  const gameStartButton = document.getElementsByClassName("game-start-button")[0];
-  const correctChars = document.getElementsByClassName("correct-chars")[0];
-  const incorrectChars = document.getElementsByClassName("incorrect-chars")[0];
+  const gameEl = document.getElementById("game");
+  const gameStartButton = document.getElementById("game-start-button");
+  const correctChars = document.getElementById("correct-chars");
+  const incorrectChars = document.getElementById("incorrect-chars");
 
   gameStartButton.addEventListener("click", () => {
     // turn off first screen

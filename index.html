@@ -1,32 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- <script defer src="https://unpkg.com/browse/debug@4.3.4/src/browser.js"></script> -->
-  <script defer type="module" src="dist/main.js"></script>
-  <link rel="stylesheet" href="static/reset.css">
-  <link rel="stylesheet" href="static/styling.css">
-  <title>BetterTyper</title>
-</head>
-<body>
-  <div class="instructions-button">
-    View Instructions
-  </div>
-  <div class="game-start-button">
-    Click here to start game
-  </div>
-  <div class="modal-background">
-    <div class="modal-child" >
-      This is a typing app that measures speed and accuracy of keystrokes over
-      a random sample of words. Please type the letters once the game begins.
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/11e76f827b.js" crossorigin="anonymous"></script>
+    <!-- <script defer src="https://unpkg.com/browse/debug@4.3.4/src/browser.js"></script> -->
+    <script defer type="module" src="dist/main.js"></script>
+    <link rel="stylesheet" href="static/reset.css">
+    <link rel="stylesheet" href="static/styling.css">
+    <title>BetterTyper</title>
+  </head>
+  <body>
+    <header> 
+      <span>BetterTyper</span>
+      <i class="fa-solid fa-keyboard"></i> 
+    </header>
+    <nav>
+      <!-- should not be using classes that are not for css -->
+      <button id="instructions-button">
+        View Instructions
+      </button>
+      <button id="game-start-button">
+        Click here to start game
+      </button>
+    </nav>
+    
+    <div class="modal-background">
+      <div class="modal-child" >
+        This is a typing app that measures speed and accuracy of keystrokes over
+        a random sample of words. Please type the letters once the game begins.
+      </div>
     </div>
-  </div>
 
-  <div class="game off"></div>
-  <div class="correct-chars off">0</div>
-  <div class="incorrect-chars off">0</div>
-  <!-- Maybe add counters in game div later but then have to modify gameEl in setUpWord Function -->
-  
-</body>
+    <div class="game off"></div>
+    <div class="correct-chars off">0</div>
+    <div class="incorrect-chars off">0</div>
+    <!-- Maybe add counters in game div later but then have to modify gameEl in setUpWord Function -->
+    <footer>
+      <a ref="">
+
+      </a>
+      <i class="fa-brands fa-github"></i>
+      <span> Follow Better Typer on Github!</span>
+    </footer>
+  </body>
 </html>

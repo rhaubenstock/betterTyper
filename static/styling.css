@@ -2,6 +2,22 @@
     https://accessibility.psu.edu/color/colorcoding/#:~:text=Developers%20using%20red%20and%20green,blue%20then%20red%20and%20green.
  */
 
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+nav {
+  flex-direction: row;
+  align-items: center;
+}
+
 p {
   border-collapse: separate;
   box-sizing: border-box;
