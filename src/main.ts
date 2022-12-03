@@ -13,7 +13,7 @@ const setUpWord = () => {
     };
     letterSpanArr[0].classList.add("current");
     gameState.ltrSpanArr = letterSpanArr;
-    gameState.gameEl.replaceChildren(...letterSpanArr);
+    gameState.gameEl!.replaceChildren(...letterSpanArr);
 };
 
 const getNextState = () => {
@@ -27,7 +27,6 @@ const getNextState = () => {
 };
 
 const processKey = (timeDiff:number) => {
-  window.console.log(timeDiff);
   if(!gameState) return;
 
   const { ltrSpanArr, words } = gameState;
@@ -41,7 +40,6 @@ const processKey = (timeDiff:number) => {
 
     const incorrectChars = document.getElementsByClassName("incorrect-chars")[0];
     incorrectChars.innerHTML = `${gameState.incorrectTimeDiffs.length}`;
-    window.console.log("hello?")
     return;
   }
   gameState.correctTimeDiffs.push(timeDiff);
@@ -102,22 +100,22 @@ const gameStop = () => {
   gameEl.classList.add("off");
 
   const instructionsButton = document.getElementById("instructions-button");
-  instructionsButton.classList.remove("off");
+  instructionsButton!.classList.remove("off");
   const gameStartButton = document.getElementById("game-start-button");
-  gameStartButton.classList.remove("off");
+  gameStartButton!.classList.remove("off");
 }
 
 
 window.addEventListener("DOMContentLoaded", () => {
-  window.console.log("DOM loaded");
+
   const modalBackground = document.getElementById("modal-background");
-  modalBackground.addEventListener("click", () => {
-    modalBackground.classList.toggle("off");
+  modalBackground!.addEventListener("click", () => {
+    modalBackground!.classList.toggle("off");
   });
 
   const instructionsButton = document.getElementById("instructions-button");
-  instructionsButton.addEventListener("click", () => {
-    modalBackground.classList.toggle("off");
+  instructionsButton!.addEventListener("click", () => {
+    modalBackground!.classList.toggle("off");
   });
 
   //probably update to querySelectorAll
@@ -128,14 +126,14 @@ window.addEventListener("DOMContentLoaded", () => {
   const correctChars = document.getElementById("correct-chars");
   const incorrectChars = document.getElementById("incorrect-chars");
 
-  gameStartButton.addEventListener("click", () => {
+  gameStartButton!.addEventListener("click", () => {
     // turn off first screen
 
-    instructionsButton.classList.toggle("off");
-    gameStartButton.classList.toggle("off");
-    gameEl.classList.toggle("off");
-    correctChars.classList.toggle("off");
-    incorrectChars.classList.toggle("off");
+    instructionsButton!.classList.toggle("off");
+    gameStartButton!.classList.toggle("off");
+    gameEl!.classList.toggle("off");
+    correctChars!.classList.toggle("off");
+    incorrectChars!.classList.toggle("off");
     gameSetup(phraseList);
     setUpWord();
     gameState.prevTimestamp = Date.now();
