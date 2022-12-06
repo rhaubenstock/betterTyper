@@ -12,7 +12,7 @@ export const phraseList:string[] = [
 ];
 
 export const gameState:TGameState = {
-    gameEl: document.getElementById("game"),
+    textElement: null,
     phraseIdx: 0,
     charIdx: 0,
     ltrSpanArr: [],
@@ -24,9 +24,10 @@ export const gameState:TGameState = {
     incorrectTimeDiffs: []
 };
 
-export const modalNames:String[] = [
+export const modalNames:string[] = [
     "guide",
     "story",
-    "resources"
+    "resources",
+    "settings"
 ];
 

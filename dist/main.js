@@ -1,16 +1,23 @@
-import { gameState, phraseList } from "./constants.js";
+import { gameState, phraseList, modalNames } from "./constants.js";
+const promptReload = (name) => alert(`${name} is missing. Please reload page.`);
+const verifyExistence = (el, name) => {
+    if (el)
+        return true;
+    promptReload(name);
+    return false;
+};
 const setUpWord = () => {
+    var _a;
     const word = gameState.words[gameState.phraseIdx];
     const letterSpanArr = [];
-    word.split("").forEach(letter => {
+    for (let i = 0; i < word.length; i++) {
         const newLetter = document.createElement("span");
-        newLetter.innerText = letter;
+        newLetter.innerText = word[i];
         letterSpanArr.push(newLetter);
-    });
-    const gameEl = document.getElementsByClassName("game")[0];
+    }
     letterSpanArr[0].classList.add("current");
     gameState.ltrSpanArr = letterSpanArr;
-    gameEl.replaceChildren(...letterSpanArr);
+    (_a = gameState.textElement) === null || _a === void 0 ? void 0 : _a.replaceChildren(...letterSpanArr);
 };
 const getNextState = () => {
     gameState.phraseIdx += 1;
@@ -22,9 +29,6 @@ const getNextState = () => {
     setUpWord();
 };
 const processKey = (timeDiff) => {
-    window.console.log(timeDiff);
-    if (!gameState)
-        return;
     const { ltrSpanArr, words } = gameState;
     const word = words[gameState.phraseIdx];
     const key = gameState.key;
@@ -34,7 +38,6 @@ const processKey = (timeDiff) => {
         gameState.incorrectTimeDiffs.push(timeDiff);
         const incorrectChars = document.getElementsByClassName("incorrect-chars")[0];
         incorrectChars.innerHTML = `${gameState.incorrectTimeDiffs.length}`;
-        window.console.log("hello?");
         return;
     }
     gameState.correctTimeDiffs.push(timeDiff);
@@ -58,7 +61,6 @@ const handleKeydown = (event) => {
     // match -> return array of matches and idxs of the matches elements
     // regEx -> test, match, execute -- resource: regex101.com
     // 
-    window.console.log("jiodjoijdiosajdsaoij");
     //
     if ((_a = event === null || event === void 0 ? void 0 : event.key) === null || _a === void 0 ? void 0 : _a.match(/[a-zA-Z ]/)) {
         gameState.key = event.key;
@@ -78,42 +80,59 @@ const gameSetup = (words) => {
 };
 const gameStop = () => {
     document.body.removeEventListener("keydown", handleKeydown);
-    // console.log(gameState.correctTimeDiffs);
-    // console.log(gameState.incorrectTimeDiffs);
-    const gameEl = document.getElementsByClassName("game")[0];
-    gameEl.innerHTML = "";
-    gameEl.classList.add("off");
-    const instructionsButton = document.getElementsByClassName("instructions-button")[0];
+    const textElement = gameState.textElement;
+    //verifyExistence already takes care of verifying textElement is not null
+    //and creates window alert if it is null
+    if (!verifyExistence(textElement, "textElement"))
+        return;
+    // @ts-ignore comment.
+    textElement.innerHTML = "";
+    // @ts-ignore comment.
+    textElement.classList.add("off");
+    const instructionsButton = document.getElementById("instructions-button");
     instructionsButton.classList.remove("off");
-    const gameStartButton = document.getElementsByClassName("game-start-button")[0];
+    const gameStartButton = document.getElementById("game-start-button");
     gameStartButton.classList.remove("off");
 };
+const setupModalListeners = () => {
+    const modalBackground = document.getElementById("modal-background");
+    //add modal click divert
+    document.body.addEventListener("click", (e) => {
+        //body listener triggers second -> on off 
+        console.log("in body listener");
+        if (modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.contains("open")) {
+            e.preventDefault();
+            modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.add("off");
+            for (const name of modalNames) {
+                const modal = document.getElementById(`${name}-modal`);
+                modal === null || modal === void 0 ? void 0 : modal.classList.add("off");
+            }
+        }
+    });
+    const setupButton = (name) => {
+        const button = document.getElementById(`${name}-button`);
+        const modal = document.getElementById(`${name}-modal`);
+        button === null || button === void 0 ? void 0 : button.addEventListener("click", () => {
+            modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.remove("off");
+            modal === null || modal === void 0 ? void 0 : modal.classList.remove("off");
+            setTimeout(() => modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.add("open"), 10);
+        });
+    };
+    for (const name of modalNames) {
+        setupButton(name);
+    }
+};
 window.addEventListener("DOMContentLoaded", () => {
-    window.console.log("DOM loaded");
-    const modalBackground = document.getElementsByClassName("modal-background")[0];
-    modalBackground.addEventListener("click", () => {
-        modalBackground.classList.toggle("off");
-    });
-    const instructionsButton = document.getElementsByClassName("instructions-button")[0];
-    instructionsButton.addEventListener("click", () => {
-        modalBackground.classList.toggle("off");
-    });
-    //probably update to querySelectorAll
-    //see here:
-    //https://stackoverflow.com/questions/2694640/find-an-element-in-dom-based-on-an-attribute-value
-    const gameEl = document.getElementsByClassName("game")[0];
-    const gameStartButton = document.getElementsByClassName("game-start-button")[0];
-    const correctChars = document.getElementsByClassName("correct-chars")[0];
-    const incorrectChars = document.getElementsByClassName("incorrect-chars")[0];
-    gameStartButton.addEventListener("click", () => {
-        // turn off first screen
-        instructionsButton.classList.toggle("off");
-        gameStartButton.classList.toggle("off");
-        gameEl.classList.toggle("off");
-        correctChars.classList.toggle("off");
-        incorrectChars.classList.toggle("off");
+    const modalBackground = document.getElementById("modal-background");
+    setupModalListeners();
+    gameState.textElement = document.getElementById("text-element");
+    const loadTextButton = document.getElementById("load-text");
+    loadTextButton === null || loadTextButton === void 0 ? void 0 : loadTextButton.addEventListener("click", () => {
+        const textbox = document.getElementById('text-element');
+        textbox === null || textbox === void 0 ? void 0 : textbox.classList.remove('off');
         gameSetup(phraseList);
         setUpWord();
         gameState.prevTimestamp = Date.now();
+        loadTextButton === null || loadTextButton === void 0 ? void 0 : loadTextButton.classList.add('off');
     });
 });

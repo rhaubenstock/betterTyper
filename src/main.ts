@@ -2,7 +2,7 @@ import { gameState, phraseList, modalNames } from "./constants.js";
 import { TGameSetup } from "./types.js";
 
 const promptReload = (name:string) =>  alert(`${name} is missing. Please reload page.`);
-const verifyExistence = (el:HTMLElement, name:string) => {
+const verifyExistence = (el:HTMLElement|null, name:string) => {
   if (el) return true;
   promptReload(name);
   return false;
@@ -19,7 +19,7 @@ const setUpWord = () => {
 
     letterSpanArr[0].classList.add("current");
     gameState.ltrSpanArr = letterSpanArr;
-    gameState.gameEl!.replaceChildren(...letterSpanArr);
+    gameState.textElement?.replaceChildren(...letterSpanArr);
 };
 
 const getNextState = () => {
@@ -94,14 +94,14 @@ const gameSetup:TGameSetup = (words:string[]) => {
 
 const gameStop = () => {
   document.body.removeEventListener("keydown", handleKeydown);
-  const gameEl = gameState.gameEl;
-  if (gameEl == null){
-    promptReload("gameEl");
-    return;
-  }
-  // if gameEl is null add it to the body of the game first?
-  gameEl.innerHTML = "";
-  gameEl.classList.add("off");
+  const textElement = gameState.textElement;
+  //verifyExistence already takes care of verifying textElement is not null
+  //and creates window alert if it is null
+  if(!verifyExistence(textElement, "textElement")) return;
+  // @ts-ignore comment.
+  textElement.innerHTML = "";
+  // @ts-ignore comment.
+  textElement.classList.add("off");
 
   const instructionsButton = document.getElementById("instructions-button");
   instructionsButton!.classList.remove("off");
@@ -114,12 +114,15 @@ const setupModalListeners = () => {
   const modalBackground = document.getElementById("modal-background");
   //add modal click divert
   document.body.addEventListener("click", (e) => {
-    if (!modalBackground?.classList.contains("off")){
+    //body listener triggers second -> on off 
+    console.log("in body listener");
+    if (modalBackground?.classList.contains("open")){
       e.preventDefault();
       modalBackground?.classList.add("off");
-      for (const name in modalNames){
-        const button = document.getElementById(`${name}-button`);
-        button?.classList.add("off");
+      modalBackground?.classList.remove("open");
+      for (const name of modalNames){
+        const modal = document.getElementById(`${name}-modal`);
+        modal?.classList.add("off");
       }
     }
   })
@@ -127,32 +130,31 @@ const setupModalListeners = () => {
   const setupButton = (name:string) => {
     const button = document.getElementById(`${name}-button`);
     const modal = document.getElementById(`${name}-modal`);
-
-    button!.addEventListener("click", () => {
-      modalBackground!.classList.remove("off");
-      modal!.classList.remove("off");
+    button?.addEventListener("click", () => {
+      modalBackground?.classList.remove("off");
+      modal?.classList.remove("off");
+      setTimeout(() => modalBackground?.classList.add("open"), 10);
     });
   }
 
-  for (const modalName in modalNames){
-    setupButton(modalName);
+  for (const name of modalNames){
+    setupButton(name);
   }
 };
 
 window.addEventListener("DOMContentLoaded", () => {
 
-  const modalBackground = document.getElementById("modal-background");
-  modalBackground!.addEventListener("click", () => {
-    modalBackground!.classList.toggle("off");
-  });
-
   setupModalListeners();
-
+  gameState.textElement = document.getElementById("text-element");
+  
   const loadTextButton = document.getElementById("load-text");
-  loadTextButton!.addEventListener("click", () => {
+  loadTextButton?.addEventListener("click", () => {
+    const textbox = document.getElementById('text-element');
+    textbox?.classList.remove('off');
     gameSetup(phraseList);
     setUpWord();
     gameState.prevTimestamp = Date.now();
+    loadTextButton?.classList.add('off');
   });
 });
 

@@ -6,6 +6,7 @@
 */
 export declare type TGameSetup = (words: string[]) => void;
 export declare type TGameState = {
+    textElement: HTMLElement | null;
     phraseIdx: number;
     charIdx: number;
     ltrSpanArr: HTMLElement[];

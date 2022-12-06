@@ -8,6 +8,7 @@ export const phraseList = [
     "A brilliant and paradoxical talker",
 ];
 export const gameState = {
+    textElement: null,
     phraseIdx: 0,
     charIdx: 0,
     ltrSpanArr: [],
@@ -18,3 +19,9 @@ export const gameState = {
     correctTimeDiffs: [],
     incorrectTimeDiffs: []
 };
+export const modalNames = [
+    "guide",
+    "story",
+    "resources",
+    "settings"
+];
