@@ -103,6 +103,7 @@ const setupModalListeners = () => {
         if (modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.contains("open")) {
             e.preventDefault();
             modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.add("off");
+            modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.remove("open");
             for (const name of modalNames) {
                 const modal = document.getElementById(`${name}-modal`);
                 modal === null || modal === void 0 ? void 0 : modal.classList.add("off");
@@ -123,7 +124,6 @@ const setupModalListeners = () => {
     }
 };
 window.addEventListener("DOMContentLoaded", () => {
-    const modalBackground = document.getElementById("modal-background");
     setupModalListeners();
     gameState.textElement = document.getElementById("text-element");
     const loadTextButton = document.getElementById("load-text");
