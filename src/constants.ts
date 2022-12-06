@@ -24,4 +24,9 @@ export const gameState:TGameState = {
     incorrectTimeDiffs: []
 };
 
+export const modalNames:String[] = [
+    "guide",
+    "story",
+    "resources"
+];
 

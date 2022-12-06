@@ -1,16 +1,22 @@
-import {gameState, phraseList} from "./constants.js";
+import { gameState, phraseList, modalNames } from "./constants.js";
 import { TGameSetup } from "./types.js";
 
+const promptReload = (name:string) =>  alert(`${name} is missing. Please reload page.`);
+const verifyExistence = (el:HTMLElement, name:string) => {
+  if (el) return true;
+  promptReload(name);
+  return false;
+}
 const setUpWord = () => {
   const word:string = gameState.words[gameState.phraseIdx];
   const letterSpanArr:HTMLElement[] = [];
 
-    for(let i = 0; i < word.length; i++){
-      const letter = word[i];
+    for (let i = 0; i < word.length; i++){
       const newLetter = document.createElement("span");
-      newLetter.innerText = letter;
+      newLetter.innerText = word[i];
       letterSpanArr.push(newLetter);
-    };
+    }
+
     letterSpanArr[0].classList.add("current");
     gameState.ltrSpanArr = letterSpanArr;
     gameState.gameEl!.replaceChildren(...letterSpanArr);
@@ -27,8 +33,6 @@ const getNextState = () => {
 };
 
 const processKey = (timeDiff:number) => {
-  if(!gameState) return;
-
   const { ltrSpanArr, words } = gameState;
   const word = words[gameState.phraseIdx];
   const key = gameState.key;
@@ -91,8 +95,8 @@ const gameSetup:TGameSetup = (words:string[]) => {
 const gameStop = () => {
   document.body.removeEventListener("keydown", handleKeydown);
   const gameEl = gameState.gameEl;
-  if(gameEl == null){
-    alert("An error has occurred. Please reload page.");
+  if (gameEl == null){
+    promptReload("gameEl");
     return;
   }
   // if gameEl is null add it to the body of the game first?
@@ -103,8 +107,37 @@ const gameStop = () => {
   instructionsButton!.classList.remove("off");
   const gameStartButton = document.getElementById("game-start-button");
   gameStartButton!.classList.remove("off");
-}
+};
 
+const setupModalListeners = () => {
+  
+  const modalBackground = document.getElementById("modal-background");
+  //add modal click divert
+  document.body.addEventListener("click", (e) => {
+    if (!modalBackground?.classList.contains("off")){
+      e.preventDefault();
+      modalBackground?.classList.add("off");
+      for (const name in modalNames){
+        const button = document.getElementById(`${name}-button`);
+        button?.classList.add("off");
+      }
+    }
+  })
+
+  const setupButton = (name:string) => {
+    const button = document.getElementById(`${name}-button`);
+    const modal = document.getElementById(`${name}-modal`);
+
+    button!.addEventListener("click", () => {
+      modalBackground!.classList.remove("off");
+      modal!.classList.remove("off");
+    });
+  }
+
+  for (const modalName in modalNames){
+    setupButton(modalName);
+  }
+};
 
 window.addEventListener("DOMContentLoaded", () => {
 
@@ -113,27 +146,10 @@ window.addEventListener("DOMContentLoaded", () => {
     modalBackground!.classList.toggle("off");
   });
 
-  const instructionsButton = document.getElementById("instructions-button");
-  instructionsButton!.addEventListener("click", () => {
-    modalBackground!.classList.toggle("off");
-  });
+  setupModalListeners();
 
-  //probably update to querySelectorAll
-  //see here:
-  //https://stackoverflow.com/questions/2694640/find-an-element-in-dom-based-on-an-attribute-value
-  const gameEl = document.getElementById("game");
-  const gameStartButton = document.getElementById("game-start-button");
-  const correctChars = document.getElementById("correct-chars");
-  const incorrectChars = document.getElementById("incorrect-chars");
-
-  gameStartButton!.addEventListener("click", () => {
-    // turn off first screen
-
-    instructionsButton!.classList.toggle("off");
-    gameStartButton!.classList.toggle("off");
-    gameEl!.classList.toggle("off");
-    correctChars!.classList.toggle("off");
-    incorrectChars!.classList.toggle("off");
+  const loadTextButton = document.getElementById("load-text");
+  loadTextButton!.addEventListener("click", () => {
     gameSetup(phraseList);
     setUpWord();
     gameState.prevTimestamp = Date.now();
