@@ -12,6 +12,8 @@ export const phraseList:string[] = [
 ];
 
 export const gameState:TGameState = {
+    active: false,
+    combo: 0,
     textElement: null,
     phraseIdx: 0,
     charIdx: 0,
@@ -21,13 +23,24 @@ export const gameState:TGameState = {
     prevChar: '',
     prevTimestamp: 0,
     correctTimeDiffs: [],
-    incorrectTimeDiffs: []
+    incorrectTimeDiffs: [],
+    dashboardEls: {},
+    dashValues: {}
 };
 
 export const modalNames:string[] = [
     "guide",
     "story",
     "resources",
-    "settings"
+    "settings",
+];
+
+export const dashNames:string[] = [
+    "time-dash",
+    "wpm-dash",
+    "combo-dash",
+    "progress-dash",
+    "correct-chars-dash",
+    "incorrect-chars-dash",
 ];
 

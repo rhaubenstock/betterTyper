@@ -99,11 +99,9 @@ const setupModalListeners = () => {
     //add modal click divert
     document.body.addEventListener("click", (e) => {
         //body listener triggers second -> on off 
-        console.log("in body listener");
-        if (modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.contains("open")) {
+        if (!(modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.contains("off"))) {
             e.preventDefault();
             modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.add("off");
-            modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.remove("open");
             for (const name of modalNames) {
                 const modal = document.getElementById(`${name}-modal`);
                 modal === null || modal === void 0 ? void 0 : modal.classList.add("off");
@@ -114,9 +112,10 @@ const setupModalListeners = () => {
         const button = document.getElementById(`${name}-button`);
         const modal = document.getElementById(`${name}-modal`);
         button === null || button === void 0 ? void 0 : button.addEventListener("click", () => {
-            modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.remove("off");
-            modal === null || modal === void 0 ? void 0 : modal.classList.remove("off");
-            setTimeout(() => modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.add("open"), 10);
+            setTimeout(() => {
+                modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.remove("off");
+                modal === null || modal === void 0 ? void 0 : modal.classList.remove("off");
+            }, 0);
         });
     };
     for (const name of modalNames) {
