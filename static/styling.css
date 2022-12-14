@@ -13,6 +13,31 @@ header {
   padding-bottom: 20px;
 }
 
+footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  width: 100vw;
+  background: rgb(20,20,20);
+}
+
+ul.contact-links {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+li.contact-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
 nav {
   flex-direction: row;
   align-items: center;
