@@ -1,7 +1,14 @@
 import { gameState, phraseList, modalNames, dashNames } from "./constants.js";
 import { TGameSetup } from "./types.js";
 
-const promptReload = (name:string) =>  alert(`${name} is missing. Please reload page.`);
+const promptReload = (name:string) => {
+  alert(`It appears you have deleted the ${name} HTML Element!
+  It seems that as a developer my choice is to either try to reinsert
+  the element, reload the page, or let you the user know what has happened and
+  let you decide how best to proceed.
+  If you have any recommendations for best practices regarding what to do in 
+  this situation please let me know through GitHub!`);
+};
 const verifyExistence = (el:HTMLElement|null, name:string) => {
   if (el) return true;
   promptReload(name);
