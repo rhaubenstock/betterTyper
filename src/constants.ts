@@ -25,7 +25,8 @@ export const gameState:TGameState = {
     correctTimeDiffs: [],
     incorrectTimeDiffs: [],
     dashboardEls: {},
-    dashValues: {}
+    dashValues: {},
+    keyboard: {}
 };
 
 export const modalNames:string[] = [

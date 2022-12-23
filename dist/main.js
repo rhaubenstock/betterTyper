@@ -1,4 +1,5 @@
 import { gameState, phraseList, modalNames, dashNames } from "./constants.js";
+import Keyboard from "./keyboard/keyboard.js";
 const promptReload = (name) => {
     alert(`It appears you have deleted the ${name} HTML Element!
   It seems that as a developer my choice is to either try to reinsert
@@ -161,6 +162,10 @@ const setUpElements = () => {
 window.addEventListener("DOMContentLoaded", () => {
     setupModalListeners();
     setUpElements();
+    // @ts-ignore comment.
+    gameState.keyboard = Keyboard;
+    // @ts-ignore comment.
+    gameState.keyboard.init();
     const loadTextButton = document.getElementById("load-text");
     loadTextButton === null || loadTextButton === void 0 ? void 0 : loadTextButton.addEventListener("click", () => {
         const textbox = document.getElementById('text-element');

@@ -21,6 +21,7 @@ export type TGameState = {
     incorrectTimeDiffs: number[];
     dashValues: {[key:string]: number}
     dashboardEls: {[key:string]: HTMLElement|null};
+    keyboard: object;
 };
 
 export type NullableHTMLDivEl = HTMLDivElement|null;

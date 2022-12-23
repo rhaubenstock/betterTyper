@@ -1,5 +1,6 @@
 import { gameState, phraseList, modalNames, dashNames } from "./constants.js";
 import { TGameSetup } from "./types.js";
+import Keyboard from "./keyboard/keyboard.js";
 
 const promptReload = (name:string) => {
   alert(`It appears you have deleted the ${name} HTML Element!
@@ -115,6 +116,7 @@ const gameSetup:TGameSetup = (words:string[]) => {
   gameState.charIdx = 0;
   gameState.phraseIdx = 0;
   gameState.words = words;
+  
   document.body.addEventListener("keydown", handleKeydown);
 };
 
@@ -182,7 +184,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
   setupModalListeners();
   setUpElements();
-
+  // @ts-ignore comment.
+  gameState.keyboard = Keyboard;
+  // @ts-ignore comment.
+  gameState.keyboard.init();
   const loadTextButton = document.getElementById("load-text");
   loadTextButton?.addEventListener("click", () => {
     const textbox = document.getElementById('text-element');

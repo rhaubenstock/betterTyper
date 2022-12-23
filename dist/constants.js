@@ -21,7 +21,8 @@ export const gameState = {
     correctTimeDiffs: [],
     incorrectTimeDiffs: [],
     dashboardEls: {},
-    dashValues: {}
+    dashValues: {},
+    keyboard: {}
 };
 export const modalNames = [
     "guide",

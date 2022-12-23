@@ -41,27 +41,21 @@ const Keyboard = {
 
   init() {
       // @ts-ignore comment.
-    this.elements.main = document.createElement("div");
+    this.elements.main = document.getElementById("keyboard-keys");
       // @ts-ignore comment.
-    this.elements.keysContainer = document.createElement("div");
+    this.elements.keysContainer = document.getElementById("virtual-keyboard");
 
       // @ts-ignore comment.
-      this.elements.main.classList.add("keyboard", "keyboard--hidden");
+      this.elements.main.classList.add("keyboard", "1keyboard--hidden");
       // @ts-ignore comment.
       this.elements.keysContainer.classList.add("keyboard__keys");
       // @ts-ignore comment.
       this.elements.keysContainer.appendChild(this._createKeys());
-
-      // @ts-ignore comment.
-      this.elements.main.appendChild(this.elements.keysContainer);
-      // @ts-ignore comment.
-      document.body.appendChild(this.elements.main);
   },
   // _ doesn't do anything functionally, just naming convention for private methods
   _createKeys() {
     const fragment = document.createDocumentFragment();
     const keyRowsLayout = reducedKeys;
-    const lastRow = ['space'];
     // add icons for backspace/space/capslock later -- using font awesome
     for (const keyRow of keyRowsLayout){
       for(const keyStr of keyRow){
@@ -69,6 +63,7 @@ const Keyboard = {
         keyElement.setAttribute("type", "button");
         keyElement.classList.add("keyboard__key");
         keyElement.textContent = keyStr.toLowerCase();
+        
 
         // can add manually click keyboard later -- not essential
         
@@ -78,7 +73,11 @@ const Keyboard = {
     }
     //last row is always space for now
     //append br element (do we need one after the space at the end? may as well for now)
-    
+    const spaceElement = document.createElement("button");
+    spaceElement.setAttribute("type", "button");
+    spaceElement.classList.add("keyboard__key", "keyboard__key--extra-wide");
+    spaceElement.textContent = "space";
+    fragment.appendChild(spaceElement);
     return fragment;
   },
 
@@ -99,3 +98,5 @@ const Keyboard = {
   // },
 
 }
+
+export default Keyboard;

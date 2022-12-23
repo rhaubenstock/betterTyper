@@ -24,5 +24,6 @@ export type TGameState = {
     dashboardEls: {
         [key: string]: HTMLElement | null;
     };
+    keyboard: object;
 };
 export type NullableHTMLDivEl = HTMLDivElement | null;
