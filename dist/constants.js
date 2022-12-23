@@ -8,6 +8,8 @@ export const phraseList = [
     "A brilliant and paradoxical talker",
 ];
 export const gameState = {
+    active: false,
+    combo: 0,
     textElement: null,
     phraseIdx: 0,
     charIdx: 0,
@@ -17,11 +19,21 @@ export const gameState = {
     prevChar: '',
     prevTimestamp: 0,
     correctTimeDiffs: [],
-    incorrectTimeDiffs: []
+    incorrectTimeDiffs: [],
+    dashboardEls: {},
+    dashValues: {}
 };
 export const modalNames = [
     "guide",
     "story",
     "resources",
-    "settings"
+    "settings",
+];
+export const dashNames = [
+    "time-dash",
+    "wpm-dash",
+    "combo-dash",
+    "progress-dash",
+    "correct-chars-dash",
+    "incorrect-chars-dash",
 ];

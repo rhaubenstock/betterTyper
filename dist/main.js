@@ -1,10 +1,25 @@
-import { gameState, phraseList, modalNames } from "./constants.js";
-const promptReload = (name) => alert(`${name} is missing. Please reload page.`);
+import { gameState, phraseList, modalNames, dashNames } from "./constants.js";
+const promptReload = (name) => {
+    alert(`It appears you have deleted the ${name} HTML Element!
+  It seems that as a developer my choice is to either try to reinsert
+  the element, reload the page, or let you the user know what has happened and
+  let you decide how best to proceed.
+  If you have any recommendations for best practices regarding what to do in 
+  this situation please let me know through GitHub!`);
+};
 const verifyExistence = (el, name) => {
     if (el)
         return true;
     promptReload(name);
     return false;
+};
+const updateDash = () => {
+    for (const name in dashNames) {
+        if (gameState.dashboardEls[name]) {
+            // @ts-ignore comment.
+            gameState.dashboardEls[name].innerHTML = gameState.dashValues[name];
+        }
+    }
 };
 const setUpWord = () => {
     var _a;
@@ -28,22 +43,36 @@ const getNextState = () => {
     }
     setUpWord();
 };
+const gameStart = () => {
+    if (!gameState.active) {
+        gameState.prevTimestamp = Date.now();
+        gameState.active = true;
+    }
+};
 const processKey = (timeDiff) => {
-    const { ltrSpanArr, words } = gameState;
+    const { ltrSpanArr, words, active } = gameState;
+    if (!active)
+        gameStart();
     const word = words[gameState.phraseIdx];
     const key = gameState.key;
     ltrSpanArr[gameState.charIdx].classList.remove("current");
     if (word[gameState.charIdx] !== key) {
         ltrSpanArr[gameState.charIdx].classList.add("error");
         gameState.incorrectTimeDiffs.push(timeDiff);
-        const incorrectChars = document.getElementsByClassName("incorrect-chars")[0];
+        gameState.combo = 0;
+        const incorrectChars = document.getElementById("incorrect-chars-count");
+        verifyExistence(incorrectChars, "incorrectChars");
+        // @ts-ignore comment.
         incorrectChars.innerHTML = `${gameState.incorrectTimeDiffs.length}`;
         return;
     }
     gameState.correctTimeDiffs.push(timeDiff);
+    gameState.combo += 1;
     ltrSpanArr[gameState.charIdx].classList.remove("error");
     ltrSpanArr[gameState.charIdx].classList.add("correct");
-    const correctChars = document.getElementsByClassName("correct-chars")[0];
+    const correctChars = document.getElementById("correct-chars-count");
+    verifyExistence(correctChars, "correctChars");
+    // @ts-ignore comment.
     correctChars.innerHTML = `${gameState.correctTimeDiffs.length}`;
     gameState.charIdx += 1;
     if (gameState.charIdx === word.length) {
@@ -97,41 +126,47 @@ const gameStop = () => {
 const setupModalListeners = () => {
     const modalBackground = document.getElementById("modal-background");
     //add modal click divert
-    document.body.addEventListener("click", (e) => {
-        //body listener triggers second -> on off 
-        if (!(modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.contains("off"))) {
-            e.preventDefault();
-            modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.add("off");
-            for (const name of modalNames) {
-                const modal = document.getElementById(`${name}-modal`);
-                modal === null || modal === void 0 ? void 0 : modal.classList.add("off");
-            }
-        }
-    });
+    // not working -> ask for help to figure out how to 
+    // disable clicks + hovers when modal is up
+    // and make next click close the modal wherever it is
+    // document.body.addEventListener("click", (e) => {
+    //   //body listener triggers second -> on off 
+    //   if (!modalBackground?.classList.contains("off")){
+    //     e.preventDefault();
+    //     modalBackground?.classList.add("off");
+    //     for (const name of modalNames){
+    //       const modal = document.getElementById(`${name}-modal`);
+    //       modal?.classList.add("off");
+    //     }
+    //   }
+    // })
     const setupButton = (name) => {
         const button = document.getElementById(`${name}-button`);
         const modal = document.getElementById(`${name}-modal`);
         button === null || button === void 0 ? void 0 : button.addEventListener("click", () => {
-            setTimeout(() => {
-                modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.remove("off");
-                modal === null || modal === void 0 ? void 0 : modal.classList.remove("off");
-            }, 0);
+            modalBackground === null || modalBackground === void 0 ? void 0 : modalBackground.classList.toggle("off");
+            modal === null || modal === void 0 ? void 0 : modal.classList.toggle("off");
         });
     };
     for (const name of modalNames) {
         setupButton(name);
     }
 };
+const setUpElements = () => {
+    gameState.textElement = document.getElementById("text-element");
+    for (const name of dashNames) {
+        gameState.dashboardEls[name] = document.getElementById(name);
+    }
+};
 window.addEventListener("DOMContentLoaded", () => {
     setupModalListeners();
-    gameState.textElement = document.getElementById("text-element");
+    setUpElements();
     const loadTextButton = document.getElementById("load-text");
     loadTextButton === null || loadTextButton === void 0 ? void 0 : loadTextButton.addEventListener("click", () => {
         const textbox = document.getElementById('text-element');
         textbox === null || textbox === void 0 ? void 0 : textbox.classList.remove('off');
         gameSetup(phraseList);
         setUpWord();
-        gameState.prevTimestamp = Date.now();
         loadTextButton === null || loadTextButton === void 0 ? void 0 : loadTextButton.classList.add('off');
     });
 });

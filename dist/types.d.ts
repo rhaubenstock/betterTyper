@@ -4,8 +4,10 @@
  * @example
  * gameSetup("hello", [])
 */
-export declare type TGameSetup = (words: string[]) => void;
-export declare type TGameState = {
+export type TGameSetup = (words: string[]) => void;
+export type TGameState = {
+    active: Boolean;
+    combo: number;
     textElement: HTMLElement | null;
     phraseIdx: number;
     charIdx: number;
@@ -16,4 +18,11 @@ export declare type TGameState = {
     prevTimestamp: number;
     correctTimeDiffs: number[];
     incorrectTimeDiffs: number[];
+    dashValues: {
+        [key: string]: number;
+    };
+    dashboardEls: {
+        [key: string]: HTMLElement | null;
+    };
 };
+export type NullableHTMLDivEl = HTMLDivElement | null;

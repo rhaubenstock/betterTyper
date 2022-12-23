@@ -22,3 +22,5 @@ export type TGameState = {
     dashValues: {[key:string]: number}
     dashboardEls: {[key:string]: HTMLElement|null};
 };
+
+export type NullableHTMLDivEl = HTMLDivElement|null;

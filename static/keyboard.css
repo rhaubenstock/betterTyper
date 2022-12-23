@@ -15,6 +15,8 @@
 Using BEM CSS Naming Convention
 https: //www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hours-of-debugging-35cea737d849/
  */
+ /* https://www.w3.org/TR/WCAG21/ */
+ 
 .keyboard__keys {
     text-align: center;
 }
@@ -53,8 +55,38 @@ https: //www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hou
     max-width: 500px;
 }
 
+/* 
+for now use colors, maybe for web accessibility -> change 
+to colors w/patterns and shapes for colorblind at some point
+ */
+.left-pinky--active{
+    color: pink;
+}
+.left-ring--active{
+    color: red;
+}
+.left-middle--active{
+    color: yellow;
+}
+.left-pointer--active{
+    color: orange;
+}
+.left-thumb--active{
+    color: brown;
+}
 
-
-/*
-    trigger key color change on keypress
-*/
+.right-pinky--active{
+    color: purple;
+}
+.right-ring--active{
+    color: blue;
+}
+.right-middle--active{
+    color: turquoise;
+}
+.right-pointer--active{
+    color: green
+}
+.right-thumb--active{
+    color: greenyellow
+}
