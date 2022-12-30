@@ -3,8 +3,8 @@
 // or creating multiple instances
 //can also look into performance later
 const reducedKeys = [
-    ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
     ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+    ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
     ['z', 'x', 'c', 'v', 'b', 'n', 'm']
 ];
 const fingerLookup = {
@@ -17,7 +17,6 @@ const fingerLookup = {
     'j': 'right-index',
     'k': 'right-middle',
     'l': 'right-ring',
-    ' ': 'right-pinky',
     'q': 'left-pinky',
     'w': 'left-ring',
     'e': 'left-middle',

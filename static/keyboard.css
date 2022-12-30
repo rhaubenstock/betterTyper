@@ -8,7 +8,6 @@
     box-shadow: 0 0 50px rbga(0, 0, 0, 0.5);
     user-select: none;
     transition: bottom 0.4s;
-    height: 100px;
 }
 
 /* 
@@ -22,7 +21,7 @@ https: //www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hou
 }
 
 .keyboard__key {
-    height: 45px;
+    height: 30px;
     width: 6%;
     max-width: 90px;
     margin: 3px;
@@ -39,7 +38,7 @@ https: //www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hou
     vertical-align: top;
     padding: 0;
     -webkit-tap-highlight-color: transparent;
-    position: relative;
+    /* position: relative; */
 }
 
 .keyboard__key:active {
@@ -68,7 +67,7 @@ to colors w/patterns and shapes for colorblind at some point
 .left-middle.pressed{
     background-color: yellow;
 }
-.left-pointer.pressed{
+.left-index.pressed{
     background-color: orange;
 }
 .left-thumb.pressed{
@@ -84,9 +83,13 @@ to colors w/patterns and shapes for colorblind at some point
 .right-middle.pressed{
     background-color: turquoise;
 }
-.right-pointer.pressed{
+.right-index.pressed{
     background-color: green
 }
 .right-thumb.pressed{
     background-color: greenyellow
+}
+
+#key--space.pressed{
+    background-color: black;
 }
