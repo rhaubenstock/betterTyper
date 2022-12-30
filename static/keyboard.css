@@ -59,34 +59,34 @@ https: //www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hou
 for now use colors, maybe for web accessibility -> change 
 to colors w/patterns and shapes for colorblind at some point
  */
-.left-pinky--active{
-    color: pink;
+.left-pinky.pressed{
+    background-color: pink;
 }
-.left-ring--active{
-    color: red;
+.left-ring.pressed{
+    background-color: red;
 }
-.left-middle--active{
-    color: yellow;
+.left-middle.pressed{
+    background-color: yellow;
 }
-.left-pointer--active{
-    color: orange;
+.left-pointer.pressed{
+    background-color: orange;
 }
-.left-thumb--active{
-    color: brown;
+.left-thumb.pressed{
+    background-color: brown;
 }
 
-.right-pinky--active{
-    color: purple;
+.right-pinky.pressed{
+    background-color: purple;
 }
-.right-ring--active{
-    color: blue;
+.right-ring.pressed{
+    background-color: blue;
 }
-.right-middle--active{
-    color: turquoise;
+.right-middle.pressed{
+    background-color: turquoise;
 }
-.right-pointer--active{
-    color: green
+.right-pointer.pressed{
+    background-color: green
 }
-.right-thumb--active{
-    color: greenyellow
+.right-thumb.pressed{
+    background-color: greenyellow
 }

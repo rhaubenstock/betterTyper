@@ -83,6 +83,11 @@ const processKey = (timeDiff) => {
         ltrSpanArr[gameState.charIdx].classList.add("current");
     }
 };
+const keyToId = (key) => {
+    if (key !== " ")
+        return `key--${key.toLowerCase()}`;
+    return "key--space";
+};
 const handleKeydown = (event) => {
     var _a;
     event.preventDefault();
@@ -94,10 +99,23 @@ const handleKeydown = (event) => {
     //
     if ((_a = event === null || event === void 0 ? void 0 : event.key) === null || _a === void 0 ? void 0 : _a.match(/[a-zA-Z ]/)) {
         gameState.key = event.key;
+        const keyEl = document.getElementById(keyToId(event.key));
+        // @ts-ignore comment.
+        keyEl.classList.add("pressed");
         const time = Date.now();
         const timeDiff = time - gameState.prevTimestamp;
         gameState.prevTimestamp = time;
         processKey(timeDiff);
+    }
+};
+const handleKeyup = (event) => {
+    var _a;
+    event.preventDefault();
+    if ((_a = event === null || event === void 0 ? void 0 : event.key) === null || _a === void 0 ? void 0 : _a.match(/[a-zA-Z ]/)) {
+        gameState.key = event.key;
+        const keyEl = document.getElementById(keyToId(event.key));
+        // @ts-ignore comment.
+        keyEl.classList.remove("pressed");
     }
 };
 const gameSetup = (words) => {
@@ -107,9 +125,14 @@ const gameSetup = (words) => {
     gameState.phraseIdx = 0;
     gameState.words = words;
     document.body.addEventListener("keydown", handleKeydown);
+    document.body.addEventListener("keyup", handleKeyup);
 };
 const gameStop = () => {
+    gameState.active = false;
     document.body.removeEventListener("keydown", handleKeydown);
+    document.body.removeEventListener("keyup", handleKeyup);
+    // @ts-ignore comment.
+    gameState.keyboard.elements.keysContainer.classList.remove("off");
     const textElement = gameState.textElement;
     //verifyExistence already takes care of verifying textElement is not null
     //and creates window alert if it is null
@@ -170,8 +193,10 @@ window.addEventListener("DOMContentLoaded", () => {
     loadTextButton === null || loadTextButton === void 0 ? void 0 : loadTextButton.addEventListener("click", () => {
         const textbox = document.getElementById('text-element');
         textbox === null || textbox === void 0 ? void 0 : textbox.classList.remove('off');
+        loadTextButton === null || loadTextButton === void 0 ? void 0 : loadTextButton.classList.add('off');
+        // @ts-ignore comment.
+        gameState.keyboard.elements.keysContainer.classList.remove("off");
         gameSetup(phraseList);
         setUpWord();
-        loadTextButton === null || loadTextButton === void 0 ? void 0 : loadTextButton.classList.add('off');
     });
 });

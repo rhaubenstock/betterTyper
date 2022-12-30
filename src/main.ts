@@ -92,6 +92,10 @@ const processKey = (timeDiff:number) => {
   }
 };
 
+const keyToId = (key: string) => {
+  if (key !== " ") return `key--${key.toLowerCase()}`;
+  return "key--space";
+}
 
 const handleKeydown = (event:KeyboardEvent) => {
   event.preventDefault();
@@ -103,12 +107,25 @@ const handleKeydown = (event:KeyboardEvent) => {
   //
   if (event?.key?.match(/[a-zA-Z ]/)) {
     gameState.key = event.key;
+    const keyEl = document.getElementById(keyToId(event.key));
+    // @ts-ignore comment.
+    keyEl.classList.add("pressed");
     const time = Date.now();
     const timeDiff = time - gameState.prevTimestamp;
     gameState.prevTimestamp = time;
     processKey(timeDiff);
   }
 };
+
+const handleKeyup = (event:KeyboardEvent) => {
+  event.preventDefault();
+  if (event?.key?.match(/[a-zA-Z ]/)) {
+    gameState.key = event.key;
+    const keyEl = document.getElementById(keyToId(event.key));
+    // @ts-ignore comment.
+    keyEl.classList.remove("pressed");
+  }
+}
 
 const gameSetup:TGameSetup = (words:string[]) => {
   // generate sequence of words
@@ -118,11 +135,17 @@ const gameSetup:TGameSetup = (words:string[]) => {
   gameState.words = words;
   
   document.body.addEventListener("keydown", handleKeydown);
+  document.body.addEventListener("keyup", handleKeyup);
 };
 
 
 const gameStop = () => {
+  gameState.active = false;
   document.body.removeEventListener("keydown", handleKeydown);
+  document.body.removeEventListener("keyup", handleKeyup);
+  // @ts-ignore comment.
+  gameState.keyboard.elements.keysContainer.classList.remove("off");
+    
   const textElement = gameState.textElement;
   //verifyExistence already takes care of verifying textElement is not null
   //and creates window alert if it is null
@@ -192,9 +215,11 @@ window.addEventListener("DOMContentLoaded", () => {
   loadTextButton?.addEventListener("click", () => {
     const textbox = document.getElementById('text-element');
     textbox?.classList.remove('off');
+    loadTextButton?.classList.add('off');
+     // @ts-ignore comment.
+    gameState.keyboard.elements.keysContainer.classList.remove("off");
     gameSetup(phraseList);
     setUpWord();
-    loadTextButton?.classList.add('off');
   });
 });
 

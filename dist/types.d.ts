@@ -4,8 +4,8 @@
  * @example
  * gameSetup("hello", [])
 */
-export type TGameSetup = (words: string[]) => void;
-export type TGameState = {
+export declare type TGameSetup = (words: string[]) => void;
+export declare type TGameState = {
     active: Boolean;
     combo: number;
     textElement: HTMLElement | null;
@@ -26,4 +26,4 @@ export type TGameState = {
     };
     keyboard: object;
 };
-export type NullableHTMLDivEl = HTMLDivElement | null;
+export declare type NullableHTMLDivEl = HTMLDivElement | null;
