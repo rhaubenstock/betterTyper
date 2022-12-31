@@ -1,19 +1,18 @@
 import { gameState, phraseList, modalNames, dashNames } from "./constants.js";
 import Keyboard from "./keyboard/keyboard.js";
-const promptReload = (name) => {
-    alert(`It appears you have deleted the ${name} HTML Element!
-  It seems that as a developer my choice is to either try to reinsert
-  the element, reload the page, or let you the user know what has happened and
-  let you decide how best to proceed.
-  If you have any recommendations for best practices regarding what to do in 
-  this situation please let me know through GitHub!`);
-};
-const verifyExistence = (el, name) => {
-    if (el)
-        return true;
-    promptReload(name);
-    return false;
-};
+// const promptReload = (name:string) => {
+//   alert(`It appears you have deleted the ${name} HTML Element!
+//   It seems that as a developer my choice is to either try to reinsert
+//   the element, reload the page, or let you the user know what has happened and
+//   let you decide how best to proceed.
+//   If you have any recommendations for best practices regarding what to do in 
+//   this situation please let me know through GitHub!`);
+// };
+// const verifyExistence = (el:HTMLElement|null, name:string) => {
+//   if (el) return true;
+//   promptReload(name);
+//   return false;
+// }
 const updateDash = () => {
     for (const name in dashNames) {
         if (gameState.dashboardEls[name]) {
@@ -62,7 +61,7 @@ const processKey = (timeDiff) => {
         gameState.incorrectTimeDiffs.push(timeDiff);
         gameState.combo = 0;
         const incorrectChars = document.getElementById("incorrect-chars-count");
-        verifyExistence(incorrectChars, "incorrectChars");
+        // verifyExistence(incorrectChars, "incorrectChars");
         // @ts-ignore comment.
         incorrectChars.innerHTML = `${gameState.incorrectTimeDiffs.length}`;
         return;
@@ -72,7 +71,7 @@ const processKey = (timeDiff) => {
     ltrSpanArr[gameState.charIdx].classList.remove("error");
     ltrSpanArr[gameState.charIdx].classList.add("correct");
     const correctChars = document.getElementById("correct-chars-count");
-    verifyExistence(correctChars, "correctChars");
+    // verifyExistence(correctChars, "correctChars");
     // @ts-ignore comment.
     correctChars.innerHTML = `${gameState.correctTimeDiffs.length}`;
     gameState.charIdx += 1;
@@ -97,11 +96,11 @@ const handleKeydown = (event) => {
     // regEx -> test, match, execute -- resource: regex101.com
     // 
     //
-    if ((_a = event === null || event === void 0 ? void 0 : event.key) === null || _a === void 0 ? void 0 : _a.match(/[a-zA-Z ]/)) {
+    if (event.key.length === 1 && ((_a = event === null || event === void 0 ? void 0 : event.key) === null || _a === void 0 ? void 0 : _a.match(/[a-zA-Z ]/))) {
         gameState.key = event.key;
         const keyEl = document.getElementById(keyToId(event.key));
         // @ts-ignore comment.
-        keyEl.classList.add("pressed");
+        keyEl === null || keyEl === void 0 ? void 0 : keyEl.classList.add("pressed");
         const time = Date.now();
         const timeDiff = time - gameState.prevTimestamp;
         gameState.prevTimestamp = time;
@@ -111,11 +110,11 @@ const handleKeydown = (event) => {
 const handleKeyup = (event) => {
     var _a;
     event.preventDefault();
-    if ((_a = event === null || event === void 0 ? void 0 : event.key) === null || _a === void 0 ? void 0 : _a.match(/[a-zA-Z ]/)) {
+    if (event.key.length === 1 && ((_a = event === null || event === void 0 ? void 0 : event.key) === null || _a === void 0 ? void 0 : _a.match(/[a-zA-Z ]/))) {
         gameState.key = event.key;
         const keyEl = document.getElementById(keyToId(event.key));
         // @ts-ignore comment.
-        keyEl.classList.remove("pressed");
+        keyEl === null || keyEl === void 0 ? void 0 : keyEl.classList.remove("pressed");
     }
 };
 const gameSetup = (words) => {
@@ -132,20 +131,22 @@ const gameStop = () => {
     document.body.removeEventListener("keydown", handleKeydown);
     document.body.removeEventListener("keyup", handleKeyup);
     // @ts-ignore comment.
-    gameState.keyboard.elements.keysContainer.classList.remove("off");
+    gameState.keyboard.elements.keysContainer.classList.add("off");
     const textElement = gameState.textElement;
     //verifyExistence already takes care of verifying textElement is not null
     //and creates window alert if it is null
-    if (!verifyExistence(textElement, "textElement"))
-        return;
+    //if(!verifyExistence(textElement, "textElement")) return;
     // @ts-ignore comment.
-    textElement.innerHTML = "";
+    textElement === null || textElement === void 0 ? void 0 : textElement.innerHTML = "";
     // @ts-ignore comment.
-    textElement.classList.add("off");
-    const instructionsButton = document.getElementById("instructions-button");
-    instructionsButton.classList.remove("off");
-    const gameStartButton = document.getElementById("game-start-button");
-    gameStartButton.classList.remove("off");
+    textElement === null || textElement === void 0 ? void 0 : textElement.classList.add("off");
+    const keyElements = document.getElementsByClassName("keyboard__key");
+    for (const key of keyElements) {
+        // @ts-ignore comment.
+        key.classList.remove("pressed");
+    }
+    const gameStartButton = document.getElementById("load-text");
+    gameStartButton === null || gameStartButton === void 0 ? void 0 : gameStartButton.classList.remove("off");
 };
 const setupModalListeners = () => {
     const modalBackground = document.getElementById("modal-background");

@@ -4,11 +4,12 @@ import { TGameState } from "./types";
 // https://www.gutenberg.org/files/18362/18362.txt
 
 export const phraseList:string[] = [
-    "A bewildering labyrinth of facts",
-    "A blank absence of interest or sympathy",
-    "A bloodless diplomatist",
-    "A breach of confidence",
-    "A brilliant and paradoxical talker",
+    "ced"
+    // "A bewildering labyrinth of facts",
+    // "A blank absence of interest or sympathy",
+    // "A bloodless diplomatist",
+    // "A breach of confidence",
+    // "A brilliant and paradoxical talker",
 ];
 
 export const gameState:TGameState = {
