@@ -2,20 +2,6 @@ import { gameState, phraseList, modalNames, dashNames } from "./constants.js";
 import { TGameSetup } from "./types.js";
 import Keyboard from "./keyboard/keyboard.js";
 
-// const promptReload = (name:string) => {
-//   alert(`It appears you have deleted the ${name} HTML Element!
-//   It seems that as a developer my choice is to either try to reinsert
-//   the element, reload the page, or let you the user know what has happened and
-//   let you decide how best to proceed.
-//   If you have any recommendations for best practices regarding what to do in 
-//   this situation please let me know through GitHub!`);
-// };
-
-// const verifyExistence = (el:HTMLElement|null, name:string) => {
-//   if (el) return true;
-//   promptReload(name);
-//   return false;
-// }
 
 const updateDash = () => {
   for(const name in dashNames){
@@ -70,7 +56,6 @@ const processKey = (timeDiff:number) => {
     gameState.incorrectTimeDiffs.push(timeDiff);
     gameState.combo = 0;
     const incorrectChars = document.getElementById("incorrect-chars-count");
-    // verifyExistence(incorrectChars, "incorrectChars");
     // @ts-ignore comment.
     incorrectChars.innerHTML = `${gameState.incorrectTimeDiffs.length}`;
     return;
@@ -81,7 +66,6 @@ const processKey = (timeDiff:number) => {
   ltrSpanArr[gameState.charIdx].classList.add("correct");
 
   const correctChars = document.getElementById("correct-chars-count");
-  // verifyExistence(correctChars, "correctChars");
   // @ts-ignore comment.
   correctChars.innerHTML = `${gameState.correctTimeDiffs.length}`;
   gameState.charIdx += 1;
@@ -136,6 +120,7 @@ const gameSetup:TGameSetup = (words:string[]) => {
   gameState.phraseIdx = 0;
   gameState.words = words;
   
+  document.getElementById("")
   document.body.addEventListener("keydown", handleKeydown);
   document.body.addEventListener("keyup", handleKeyup);
 };
@@ -150,9 +135,6 @@ const gameStop = () => {
   gameState.keyboard.elements.keysContainer.classList.add("off");
     
   const textElement = gameState.textElement;
-  //verifyExistence already takes care of verifying textElement is not null
-  //and creates window alert if it is null
-  //if(!verifyExistence(textElement, "textElement")) return;
   // @ts-ignore comment.
   textElement?.innerHTML = "";
   // @ts-ignore comment.
@@ -171,22 +153,6 @@ const gameStop = () => {
 const setupModalListeners = () => {
   
   const modalBackground = document.getElementById("modal-background");
-  //add modal click divert
-  // not working -> ask for help to figure out how to 
-  // disable clicks + hovers when modal is up
-  // and make next click close the modal wherever it is
-
-  // document.body.addEventListener("click", (e) => {
-  //   //body listener triggers second -> on off 
-  //   if (!modalBackground?.classList.contains("off")){
-  //     e.preventDefault();
-  //     modalBackground?.classList.add("off");
-  //     for (const name of modalNames){
-  //       const modal = document.getElementById(`${name}-modal`);
-  //       modal?.classList.add("off");
-  //     }
-  //   }
-  // })
 
   const setupButton = (name:string) => {
     const button = document.getElementById(`${name}-button`);
@@ -202,6 +168,7 @@ const setupModalListeners = () => {
   }
 };
 
+
 const setUpElements = () => {
   gameState.textElement = document.getElementById("text-element");
 
@@ -214,7 +181,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
   setupModalListeners();
   setUpElements();
-  // @ts-ignore comment.
   gameState.keyboard = Keyboard;
   // @ts-ignore comment.
   gameState.keyboard.init();

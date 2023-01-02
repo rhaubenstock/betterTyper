@@ -86,6 +86,10 @@ p {
   color: rgb(39, 221, 130);
 }
 
+button {
+  cursor: pointer;
+}
+
 .off {
   display: none;
 }

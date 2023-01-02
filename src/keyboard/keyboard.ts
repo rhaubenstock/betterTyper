@@ -113,24 +113,7 @@ const Keyboard = {
     spaceElement.textContent = "space";
     fragment.appendChild(spaceElement);
     return fragment;
-  },
-
-  // _triggerEvent(handlerName) {
-    
-  // },
-
-  // _toggleCapsLock() {
-
-  // },
-
-  // open(initialValue, oninput, onclose) {
-
-  // },
-
-  // close () {
-
-  // },
-
+  }
 }
 
 export default Keyboard;
